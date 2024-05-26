@@ -1,0 +1,27 @@
+services:
+  db:
+    image: mariadb:latest
+    container_name: userdb
+    environment:
+      MYSQL_ROOT_PASSWORD: userpass
+      MYSQL_DATABASE: individualuserdb
+      MYSQL_USER: quinnusers
+      MYSQL_PASSWORD: userpass
+    ports:
+      - "3306:3306"
+    
+  users:
+    build: .
+    container_name: userbackend
+    command: python manage.py runserver 0.0.0.0:8010
+    volumes:
+      - .:/app
+    ports:
+      - "8010:8010"
+    depends_on:
+      - db
+    environment:
+      - DATABASE_HOST=userdb
+      - DATABASE_NAME=individualuserdb
+      - DATABASE_USER=quinnusers
+      - DATABASE_PASSWORD=userpass
